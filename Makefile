@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 
 BIN = $(wildcard ./*.bin)
+ELF = $(wildcard ./*.elf)
 OFFSET = 0x08000000
 OPEN_OCD_PROGRAMMER_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 OPEN_OCD_MK_CFG = /usr/local/share/openocd/scripts/target/stm32g0x.cfg

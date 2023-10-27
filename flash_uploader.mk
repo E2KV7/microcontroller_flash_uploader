@@ -6,6 +6,7 @@ SHELL=/bin/bash
 # 	OFFSET = 0x08000000
 # 	OPEN_OCD_PROGRAMMER_CFG = /usr/local/share/openocd/scripts/interface/stlink.cfg
 # 	OPEN_OCD_MK_CFG = /usr/local/share/openocd/scripts/target/stm32g0x.cfg
+#   ELF = ./Project.elf # to use GDB
 
 HELP_FLASH_UPLOADER = \
 	" make flash     : upload flash use OpenOCD\n"\
@@ -17,7 +18,7 @@ HELP_FLASH_UPLOADER = \
 
 .PHONY:  flash erase flash-st erase-st gdb-server gdb
 
-flash:
+flash: $(BIN)
 	openocd -f $(OPEN_OCD_PROGRAMMER_CFG) \
 	-f $(OPEN_OCD_MK_CFG) \
 	-c init \
@@ -30,17 +31,17 @@ erase:
 	-c "flash init; init; reset halt; flash erase_sector 0 1 last " \
 	-c shutdown \
 
-flash-st:
+flash-st: $(BIN)
 	st-flash write $(BIN) $(OFFSET)
 
 erase-st:
 	st-flash erase
 
 OPENOCD_PORT=3333
-gdb: $(PROJECT)
+gdb: $(ELF)
 	openocd -f $(OPEN_OCD_PROGRAMMER_CFG) \
 	-f $(OPEN_OCD_MK_CFG) \
 	-c 'transport select hla_swd; reset_config none' &
-	arm-none-eabi-gdb $(PROJECT) \
+	arm-none-eabi-gdb $(ELF) \
 	-ex 'target remote localhost:$(OPENOCD_PORT); monitor reset halt' \
 	&& killall openocd

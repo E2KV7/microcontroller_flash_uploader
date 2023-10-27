@@ -11,3 +11,8 @@ Target:
 	make flash-st  : upload flash use st-flash
 	make erase-st  : erase flash use st-flash
 	make gdb       : open GNU debugger
+
+Example use:
+
+	make flash BIN=./dodopiza.bin OPEN_OCD_MK_CFG=./stm32f10x.cfg
+	
